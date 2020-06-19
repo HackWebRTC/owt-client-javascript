@@ -138,7 +138,8 @@ const runSocketIOSample = function() {
         var isHttps = (location.protocol === 'https:');
         var mediaUrl = getParameterByName('url');
         var isPublish = getParameterByName('publish');
-        createToken(myRoom, 'user', 'presenter', function(response) {
+        var uid = getParameterByName('uid') || 'web-user';
+        createToken(myRoom, uid, 'presenter', function(response) {
             var token = response;
             conference.join(token).then(resp => {
                 myId = resp.self.id;

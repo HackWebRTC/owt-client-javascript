@@ -111,7 +111,7 @@ const runSocketIOSample = function() {
         console.log('A new stream is added ', event.stream.id);
         isSelf = isSelf?isSelf:event.stream.id != publicationGlobal.id;
         subscribeForward && isSelf && renderVideo(event.stream);
-        mixStream(myRoom, event.stream.id, 'common');
+        // mixStream(myRoom, event.stream.id, 'common');
         event.stream.addEventListener('ended', () => {
             console.log(event.stream.id + ' is ended.');
         });
@@ -138,7 +138,8 @@ const runSocketIOSample = function() {
                 }
                 if (isPublish !== 'false') {
                     const audioConstraintsForMic = new Owt.Base.AudioTrackConstraints(Owt.Base.AudioSourceInfo.MIC);
-                    const videoConstraintsForCamera = new Owt.Base.VideoTrackConstraints(Owt.Base.VideoSourceInfo.CAMERA);
+                    let videoConstraintsForCamera = new Owt.Base.VideoTrackConstraints(Owt.Base.VideoSourceInfo.CAMERA);
+                    videoConstraintsForCamera.resolution = myResolution;
                     let mediaStream;
                     Owt.Base.MediaStreamFactory.createMediaStream(new Owt.Base.StreamConstraints(
                         audioConstraintsForMic, videoConstraintsForCamera)).then(stream => {
@@ -147,9 +148,9 @@ const runSocketIOSample = function() {
                             mediaStream, new Owt.Base.StreamSourceInfo(
                                 'mic', 'camera'));
                         $('.local video').get(0).srcObject = stream;
-                        conference.publish(localStream).then(publication => {
+                        conference.publish(localStream, {video: [{codec: {name: 'h264', profile: 'B'}, maxBitrate: 2500}]}).then(publication => {
                             publicationGlobal = publication;
-                            mixStream(myRoom, publication.id, 'common')
+                            // mixStream(myRoom, publication.id, 'common')
                             publication.addEventListener('error', (err) => {
                                 console.log('Publication error: ' + err.error.message);
                             });

@@ -42,7 +42,7 @@ var app = express();
 
 // app.configure ya no existe
 app.use(errorhandler());
-app.use(morgan('dev'));
+app.use(morgan('common'));
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({

@@ -124,7 +124,7 @@ const runSocketIOSample = function() {
         console.log('A new stream is added ', event.stream.id);
         isSelf = isSelf?isSelf:event.stream.id != publicationGlobal.id;
         subscribeForward && isSelf && subscribeAndRenderVideo(event.stream);
-        mixStream(myRoom, event.stream.id, 'common');
+        //mixStream(myRoom, event.stream.id, 'common');
         event.stream.addEventListener('ended', () => {
             console.log(event.stream.id + ' is ended.');
         });
@@ -152,6 +152,10 @@ const runSocketIOSample = function() {
                     let audioConstraints = new Owt.Base.AudioTrackConstraints(Owt.Base.AudioSourceInfo.MIC);
                     // videoConstraintsForCamera
                     let videoConstraints = new Owt.Base.VideoTrackConstraints(Owt.Base.VideoSourceInfo.CAMERA);
+                    videoConstraints.resolution = {
+                        width: 640,
+                        height: 480
+                    };
                     if (shareScreen) {
                         // audioConstraintsForScreen
                         audioConstraints = new Owt.Base.AudioTrackConstraints(Owt.Base.AudioSourceInfo.SCREENCAST);
@@ -169,6 +173,8 @@ const runSocketIOSample = function() {
                                 {rid: 'h', active: true/*, scaleResolutionDownBy: 2.0*/},
                                 {rid: 'f', active: true}
                             ]};
+                        } else {
+                            publishOption = {video: [{codec: {name: 'h264', profile: 'B'}, maxBitrate: 800}]};
                         }
                         mediaStream = stream;
                         localStream = new Owt.Base.LocalStream(
@@ -177,7 +183,7 @@ const runSocketIOSample = function() {
                         $('.local video').get(0).srcObject = stream;
                         conference.publish(localStream, publishOption).then(publication => {
                             publicationGlobal = publication;
-                            mixStream(myRoom, publication.id, 'common')
+                            //mixStream(myRoom, publication.id, 'common')
                             publication.addEventListener('error', (err) => {
                                 console.log('Publication error: ' + err.error.message);
                             });
